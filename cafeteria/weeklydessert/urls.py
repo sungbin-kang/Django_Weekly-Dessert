@@ -6,7 +6,7 @@ urlpatterns = [
 	path("", views.index, name="index"),
     path("account/", include("django.contrib.auth.urls")),
   
-	# Add a path to your signup request below:
+	path("signup/", views.SignUp.as_view(), name="signup"),
 
 	# Add a path to your logout request below:
 

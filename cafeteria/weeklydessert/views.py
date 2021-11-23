@@ -21,7 +21,10 @@ def index(request):
   }
   return render(request, "index.html", context)
 
-# Create your class-based Signup view below:
+class SignUp(CreateView):
+    form_class = UserCreationForm
+    template_name = "registration/signup.html"
+    success_url = reverse_lazy("login")
 
 class DetailsView(DetailView):
   model = Week
