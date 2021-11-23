@@ -1,0 +1,92 @@
+diff --git a/cafeteria/cafeteria/__pycache__/settings.cpython-310.pyc b/cafeteria/cafeteria/__pycache__/settings.cpython-310.pyc
+index 8af3a8e..aed0088 100644
+Binary files a/cafeteria/cafeteria/__pycache__/settings.cpython-310.pyc and b/cafeteria/cafeteria/__pycache__/settings.cpython-310.pyc differ
+diff --git a/cafeteria/cafeteria/settings.py b/cafeteria/cafeteria/settings.py
+index 47f547c..d15d0d2 100644
+--- a/cafeteria/cafeteria/settings.py
++++ b/cafeteria/cafeteria/settings.py
+@@ -125,12 +125,3 @@ STATIC_URL = '/static/'
+ # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
+ 
+ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+-
+-LOGIN_URL = '/account/login'
+-LOGIN_REDIRECT_URL = 'index'
+-LOGOUT_REDIRECT_URL = 'index'
+-
+-CSRF_COOKIE_SAMESITE = 'None'
+-CSRF_COOKIE_SECURE = True
+-SESSION_COOKIE_SAMESITE = 'None'
+-SESSION_COOKIE_SECURE = True
+\ No newline at end of file
+diff --git a/cafeteria/db.sqlite3 b/cafeteria/db.sqlite3
+index 274e3cf..7116622 100644
+Binary files a/cafeteria/db.sqlite3 and b/cafeteria/db.sqlite3 differ
+diff --git a/cafeteria/weeklydessert/__pycache__/urls.cpython-310.pyc b/cafeteria/weeklydessert/__pycache__/urls.cpython-310.pyc
+index 7ff4a54..d6454ab 100644
+Binary files a/cafeteria/weeklydessert/__pycache__/urls.cpython-310.pyc and b/cafeteria/weeklydessert/__pycache__/urls.cpython-310.pyc differ
+diff --git a/cafeteria/weeklydessert/__pycache__/views.cpython-310.pyc b/cafeteria/weeklydessert/__pycache__/views.cpython-310.pyc
+index 9c88d02..1898be6 100644
+Binary files a/cafeteria/weeklydessert/__pycache__/views.cpython-310.pyc and b/cafeteria/weeklydessert/__pycache__/views.cpython-310.pyc differ
+diff --git a/cafeteria/weeklydessert/urls.py b/cafeteria/weeklydessert/urls.py
+index 7a22484..5475713 100644
+--- a/cafeteria/weeklydessert/urls.py
++++ b/cafeteria/weeklydessert/urls.py
+@@ -5,11 +5,8 @@ from . import views
+ urlpatterns = [
+ 	path("", views.index, name="index"),
+     path("account/", include("django.contrib.auth.urls")),
+-  
+ 	path("signup/", views.SignUp.as_view(), name="signup"),
+-
+ 	path("logout/", views.logout_request, name="logout"),
+-
+ 	path("polls/<int:pk>/", views.DetailsView.as_view(), name="detail"),
+ 	path("polls/<int:pk>/results/", views.ResultsView.as_view(), name="results"),
+ 	path("polls/<int:week_id>/vote/", views.vote, name="vote"),
+diff --git a/cafeteria/weeklydessert/views.py b/cafeteria/weeklydessert/views.py
+index 75fc881..39abb70 100644
+--- a/cafeteria/weeklydessert/views.py
++++ b/cafeteria/weeklydessert/views.py
+@@ -2,15 +2,15 @@ from django.shortcuts import render, redirect
+ from django.http import Http404
+ from django.urls import reverse
+ from .models import Week, Choice
+-# import the login_required decorator and the LoginRequiredMixin mixin below
+-
++from django.contrib.auth.decorators import login_required
++from django.contrib.auth.mixins import LoginRequiredMixin
+ from django.contrib.auth import logout
+ from django.urls import reverse_lazy
+ from django.contrib.auth.forms import UserCreationForm
+ from django.views.generic import ListView, DetailView
+ from django.views.generic.edit import CreateView
+ 
+-# Add login_required decorator:
++@login_required
+ def index(request):
+   latest_week_poll = Week.objects.get(pk=1)
+   context = {
+@@ -24,11 +24,11 @@ class SignUp(CreateView):
+     template_name = "registration/signup.html"
+     success_url = reverse_lazy("login")
+ 
+-class DetailsView(DetailView):
++class DetailsView(LoginRequiredMixin, DetailView):
+   model = Week
+   template_name = "detail.html"
+ 
+-class ResultsView(DetailView):
++class ResultsView(LoginRequiredMixin, DetailView):
+   model = Week
+   template_name = "results.html"
+ 
+@@ -36,7 +36,7 @@ def logout_request(request):
+     logout(request)
+     return redirect("index")
+ 
+-# Add login_required decorator:
++@login_required
+ def vote(request, week_id):
+   try:
+     week = Week.objects.get(pk=week_id)
