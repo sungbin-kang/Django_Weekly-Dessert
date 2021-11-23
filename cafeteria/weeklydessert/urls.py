@@ -4,7 +4,7 @@ from . import views
 
 urlpatterns = [
 	path("", views.index, name="index"),
-  # Add a path to your auth links below:
+    path("account/", include("django.contrib.auth.urls")),
   
 	# Add a path to your signup request below:
 
