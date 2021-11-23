@@ -2,15 +2,15 @@ from django.shortcuts import render, redirect
 from django.http import Http404
 from django.urls import reverse
 from .models import Week, Choice
-# import the login_required decorator and the LoginRequiredMixin mixin below
-
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import logout
 from django.urls import reverse_lazy
 from django.contrib.auth.forms import UserCreationForm
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView
 
-# Add login_required decorator:
+@login_required
 def index(request):
   latest_week_poll = Week.objects.get(pk=1)
   context = {
@@ -24,11 +24,11 @@ class SignUp(CreateView):
     template_name = "registration/signup.html"
     success_url = reverse_lazy("login")
 
-class DetailsView(DetailView):
+class DetailsView(LoginRequiredMixin, DetailView):
   model = Week
   template_name = "detail.html"
 
-class ResultsView(DetailView):
+class ResultsView(LoginRequiredMixin, DetailView):
   model = Week
   template_name = "results.html"
 
@@ -36,7 +36,7 @@ def logout_request(request):
     logout(request)
     return redirect("index")
 
-# Add login_required decorator:
+@login_required
 def vote(request, week_id):
   try:
     week = Week.objects.get(pk=week_id)
