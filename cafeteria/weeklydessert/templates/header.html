@@ -5,7 +5,7 @@
 <div class="header">
   <img src="{% static 'weeklydessert/Dessert.png' %}" >
 	{% if user.username %}
-	  {% comment %} Add your logout link below {% endcomment %}
+    <a class="logout-button" href="{% url 'logout' %}">Log Out</a>
     
   {% endif %}
   <div class="header-content">

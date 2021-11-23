@@ -8,7 +8,7 @@ urlpatterns = [
   
 	path("signup/", views.SignUp.as_view(), name="signup"),
 
-	# Add a path to your logout request below:
+	path("logout/", views.logout_request, name="logout"),
 
 	path("polls/<int:pk>/", views.DetailsView.as_view(), name="detail"),
 	path("polls/<int:pk>/results/", views.ResultsView.as_view(), name="results"),

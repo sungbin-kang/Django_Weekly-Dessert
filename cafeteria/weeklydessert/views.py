@@ -4,9 +4,7 @@ from django.urls import reverse
 from .models import Week, Choice
 # import the login_required decorator and the LoginRequiredMixin mixin below
 
-
-# Import the logout function from django.contrib.auth below
-
+from django.contrib.auth import logout
 from django.urls import reverse_lazy
 from django.contrib.auth.forms import UserCreationForm
 from django.views.generic import ListView, DetailView
@@ -34,7 +32,9 @@ class ResultsView(DetailView):
   model = Week
   template_name = "results.html"
 
-# Create your logout function, logout_request, below:
+def logout_request(request):
+    logout(request)
+    return redirect("index")
 
 # Add login_required decorator:
 def vote(request, week_id):
