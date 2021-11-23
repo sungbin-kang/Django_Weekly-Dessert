@@ -1,0 +1,2 @@
+# Weekly Dessert - Django Project
+
